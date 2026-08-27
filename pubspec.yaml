@@ -1,7 +1,7 @@
 name: grocery_erp
 description: "نظام محاسبي وإداري متكامل للبقالات ومحلات بيع الجملة - Offline First"
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ^3.6.0

@@ -48,6 +48,7 @@ app.*.map.json
 /android/key.properties
 *.keystore
 *.jks
+grocery-erp-keystore.jks
 
 # iOS specific
 /ios/Pods/
