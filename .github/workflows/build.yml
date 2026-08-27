@@ -37,9 +37,10 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
           echo "$KEYSTORE_BASE64" | base64 --decode > android/grocery-erp-keystore.jks
-          printf "storePassword=%s\nkeyPassword=%s\nkeyAlias=%s\nstoreFile=grocery-erp-keystore.jks\n" \
-            "$KEYSTORE_PASSWORD" "$KEY_PASSWORD" "$KEY_ALIAS" > android/key.properties
-          ls -la android/grocery-erp-keystore.jks android/key.properties
+          echo "storePassword=$KEYSTORE_PASSWORD" > android/key.properties
+          echo "keyPassword=$KEY_PASSWORD" >> android/key.properties
+          echo "keyAlias=$KEY_ALIAS" >> android/key.properties
+          echo "storeFile=grocery-erp-keystore.jks" >> android/key.properties
 
       - name: Build release APK
         run: flutter build apk --release
