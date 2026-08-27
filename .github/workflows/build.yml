@@ -39,6 +39,7 @@ jobs:
           echo "$KEYSTORE_BASE64" | base64 --decode > android/grocery-erp-keystore.jks
           printf "storePassword=%s\nkeyPassword=%s\nkeyAlias=%s\nstoreFile=grocery-erp-keystore.jks\n" \
             "$KEYSTORE_PASSWORD" "$KEY_PASSWORD" "$KEY_ALIAS" > android/key.properties
+          ls -la android/grocery-erp-keystore.jks android/key.properties
 
       - name: Build APK
         run: flutter build apk --release
@@ -48,23 +49,3 @@ jobs:
           name: app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 7
-
-  release:
-    needs: build
-    if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: app-release-apk
-          path: artifacts/
-
-      - uses: softprops/action-gh-release@v2
-        with:
-          name: Release ${{ github.ref_name }}
-          files: artifacts/app-release.apk
-          generate_release_notes: true
