@@ -45,19 +45,19 @@ jobs:
 
       # Decode keystore from secrets (for signed release builds)
       - name: Decode Keystore
-        if: env.KEYSTORE_BASE64 != ''
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          echo "$KEYSTORE_BASE64" | base64 --decode > android/grocery-erp-keystore.jks
-          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > android/key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
-          echo "storeFile=grocery-erp-keystore.jks" >> android/key.properties
-          echo "Keystore decoded successfully"
-
-      - name: Build debug APK
-        run: flutter build apk --debug
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 --decode > android/grocery-erp-keystore.jks
+            echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > android/key.properties
+            echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+            echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+            echo "storeFile=grocery-erp-keystore.jks" >> android/key.properties
+            echo "Keystore decoded successfully"
+          else
+            echo "No keystore secret found, will use debug signing"
+          fi
 
       - name: Build release APK
         run: flutter build apk --release
@@ -67,19 +67,12 @@ jobs:
           BUILD_TOOLS=$(ls -d $ANDROID_HOME/build-tools/*/ | sort -V | tail -1)
           "${BUILD_TOOLS}apksigner" verify --verbose build/app/outputs/flutter-apk/app-release.apk || true
 
-      - name: Upload debug APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: grocery-erp-debug-apk
-          path: build/app/outputs/flutter-apk/app-debug.apk
-          retention-days: 14
-
       - name: Upload release APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: grocery-erp-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-          retention-days: 30
+          retention-days: 7
 
   release:
     name: Create GitHub Release
