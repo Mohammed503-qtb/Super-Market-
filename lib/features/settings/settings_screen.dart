@@ -7,6 +7,8 @@ import '../../application/providers/auth_provider.dart';
 import '../../application/service_locator.dart';
 import '../../data/database/app_database.dart';
 import '../shared/widgets.dart';
+import 'about_screen.dart';
+import 'change_password_screen.dart';
 
 /// شاشة الإعدادات
 /// ----------------
@@ -225,6 +227,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               _buildCashboxSection(),
                             ],
                           ),
+                        const SizedBox(height: 24),
+                        _buildQuickActionsSection(),
                         const SizedBox(height: 24),
                         _buildActions(),
                       ],
@@ -453,6 +457,81 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   // =====================
+  // إجراءات سريعة (حول التطبيق + تغيير كلمة المرور)
+  // =====================
+
+  Widget _buildQuickActionsSection() {
+    final theme = Theme.of(context);
+    return _SettingsCard(
+      title: 'إجراءات الحساب والتطبيق',
+      icon: Icons.manage_accounts_outlined,
+      color: AppColors.primaryDark,
+      children: [
+        Text(
+          'إدارة حسابك الشخصي ومراجعة معلومات النظام.',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: AppColors.textSecondaryLight,
+          ),
+        ),
+        const SizedBox(height: 12),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            // عرض البطاقات جنبًا إلى جنب على الشاشات العريضة، وعمودي على الضيقة.
+            final isWide = constraints.maxWidth >= 480;
+            final cards = <Widget>[
+              Expanded(child: _buildChangePasswordCard()),
+              if (isWide) const SizedBox(width: 12),
+              Expanded(child: _buildAboutCard()),
+            ];
+            return isWide
+                ? Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: cards)
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildChangePasswordCard(),
+                      const SizedBox(height: 12),
+                      _buildAboutCard(),
+                    ],
+                  );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildChangePasswordCard() {
+    return _ActionTile(
+      title: 'تغيير كلمة المرور',
+      subtitle: 'حدّث كلمة مرور حسابك الحالي.',
+      icon: Icons.lock_person_outlined,
+      color: AppColors.accent,
+      onTap: () async {
+        await Navigator.of(context).push<bool>(
+          MaterialPageRoute<bool>(
+            builder: (_) => const ChangePasswordScreen(),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildAboutCard() {
+    return _ActionTile(
+      title: 'حول التطبيق',
+      subtitle: 'الإصدار، الميزات، والترخيص.',
+      icon: Icons.info_outline,
+      color: AppColors.info,
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => const AboutScreen(),
+          ),
+        );
+      },
+    );
+  }
+
+  // =====================
   // أزرار الحفظ
   // =====================
 
@@ -534,6 +613,79 @@ class _SettingsCard extends StatelessWidget {
             const SizedBox(height: 16),
             ...children,
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================================
+//  بلاطة إجراء قابلة للنقر (تُستخدم في قسم الإجراءات السريعة)
+// ============================================================================
+
+class _ActionTile extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _ActionTile({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: color.withValues(alpha: 0.06),
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: color.withValues(alpha: 0.25)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: color, size: 22),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppColors.textSecondaryLight,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_left, color: color, size: 22),
+            ],
+          ),
         ),
       ),
     );
