@@ -49,6 +49,7 @@ class AppConstants {
 
   static const String appName = 'نظام البقالة المحاسبي';
   static const String appShortName = 'بقالتي';
+  static const String appVersion = '1.0.0';
   static const String defaultCurrency = 'ر.ي';
   static const String defaultCurrencyCode = 'YER';
   static const String defaultLanguageCode = 'ar';

@@ -1,0 +1,19 @@
+# Signing configuration for release builds
+# Copy this file to key.properties and fill in your keystore details
+#
+# To generate a keystore:
+#   keytool -genkey -v -keystore ~/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+#
+# Then fill in:
+#   storePassword=<your keystore password>
+#   keyPassword=<your key password>
+#   keyAlias=upload
+#   storeFile=<path to your keystore file>
+#
+# WARNING: Never commit the actual key.properties file with real credentials!
+# It's already in .gitignore.
+
+storePassword=
+keyPassword=
+keyAlias=
+storeFile=

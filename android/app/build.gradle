@@ -5,6 +5,12 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace = "com.grocery.grocery_erp"
     compileSdk = 35
@@ -22,17 +28,32 @@ android {
     defaultConfig {
         applicationId = "com.grocery.grocery_erp"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0.0"
     }
 
+    signingConfigs {
+        release {
+            if (keystoreProperties['storeFile'] != null && keystoreProperties['storeFile'] != '') {
+                keyAlias = keystoreProperties['keyAlias']
+                keyPassword = keystoreProperties['keyPassword']
+                storeFile = file(keystoreProperties['storeFile'])
+                storePassword = keystoreProperties['storePassword']
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // Sign with debug keys for now so flutter build apk works
-            signingConfig = signingConfigs.debug
+            // Sign with debug keys if no keystore is configured (for development)
+            // For production: configure key.properties with your keystore
+            signingConfig = keystoreProperties['storeFile'] != null && keystoreProperties['storeFile'] != ''
+                ? signingConfigs.release
+                : signingConfigs.debug
             minifyEnabled = false
             shrinkResources = false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }

@@ -17,6 +17,7 @@ import 'domain/services/purchases_service.dart';
 import 'domain/services/sales_service.dart';
 import 'domain/services/suppliers_service.dart';
 import 'features/app_shell.dart';
+import 'features/splash/splash_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -105,9 +106,11 @@ class _GroceryErpAppState extends State<GroceryErpApp> {
             child: child!,
           );
         },
-        home: AppShell(
-          themeMode: _themeMode,
-          onToggleTheme: _toggleTheme,
+        home: SplashPage(
+          next: AppShell(
+            themeMode: _themeMode,
+            onToggleTheme: _toggleTheme,
+          ),
         ),
       ),
     );
