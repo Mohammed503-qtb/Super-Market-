@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:
@@ -29,17 +31,60 @@ jobs:
       - name: Generate Drift code
         run: dart run build_runner build --delete-conflicting-outputs
 
-      - name: Test secret
-        env:
-          MY_SECRET: ${{ secrets.TEST_SECRET }}
-        run: echo "Secret length is ${#MY_SECRET}"
+      - name: Analyze code
+        run: flutter analyze
+        continue-on-error: true
+
+      - name: Run tests
+        run: flutter test
+        continue-on-error: true
 
       - name: Build release APK
         run: flutter build apk --release
 
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
           retention-days: 7
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-release-apk
+          path: artifacts/
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{ github.ref_name }}
+          files: artifacts/app-release.apk
+          body: |
+            # نظام البقالة المحاسبي ${{ github.ref_name }}
+
+            ## التحميل والتثبيت
+            حمّل ملف `app-release.apk` من الأسفل وثبّته على جهاز Android.
+
+            ## بيانات الدخول
+            - اسم المستخدم: admin
+            - كلمة المرور: admin123
+
+            > غيّر كلمة المرور فور أول تسجيل دخول.
+
+            ## المميزات
+            - يعمل بالكامل بدون إنترنت
+            - معاملات ذرية لكل العمليات المالية
+            - نظام صلاحيات كامل
+            - سجل تدقيق كامل
+            - نسخ احتياطي واستعادة
+            - دعم العربية و RTL
+            - الوضع الفاتح والداكن
+          generate_release_notes: true
