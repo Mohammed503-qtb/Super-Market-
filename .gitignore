@@ -1,0 +1,93 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code (optional - comment to include)
+.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Android specific
+/android/.gradle/
+/android/local.properties
+/android/key.properties
+*.keystore
+*.jks
+
+# iOS specific
+/ios/Pods/
+/ios/Flutter/Flutter.framework
+/ios/Flutter/Flutter.podspec
+
+# Web specific
+/web/
+
+# Windows specific
+/windows/Flutter/
+
+# macOS specific
+/macos/Flutter/
+
+# Linux specific
+/linux/Flutter/
+
+# Generated files (keep drift generated for build)
+# *.g.dart - kept because drift generated files are needed for build
+*.freezed.dart
+*.mocks.dart
+
+# Coverage
+coverage/
+lcov.info
+
+# Secrets and credentials
+.env
+.env.local
+secrets.json
+credentials.json
+
+# Database files (local development)
+*.sqlite
+*.sqlite3
+*.db
+!prisma/schema.prisma
+
+# Backup files
+*.bak
+*.backup
+backups/

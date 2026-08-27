@@ -1,0 +1,50 @@
+name: grocery_erp
+description: "نظام محاسبي وإداري متكامل للبقالات ومحلات بيع الجملة - Offline First"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.6.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # Database
+  drift: ^2.21.0
+  sqlite3_flutter_libs: ^0.5.27
+  path_provider: ^2.1.5
+  path: ^1.9.0
+
+  # State management
+  provider: ^6.1.2
+
+  # Routing
+  go_router: ^14.6.2
+
+  # Utils
+  intl: ^0.19.0
+  shared_preferences: ^2.3.3
+  decimal: ^3.0.2
+
+  # Security
+  crypto: ^3.0.6
+
+  # File/Backup (minimal)
+  # archive removed - not used
+
+  # UI - flutter_svg removed, not used
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  drift_dev: ^2.21.0
+  build_runner: ^2.4.13
+
+flutter:
+  uses-material-design: true
+  generate: true
